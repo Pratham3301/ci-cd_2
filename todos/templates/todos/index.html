@@ -1,6 +1,270 @@
 {% extends 'todos/base.html' %}
 {% block title %}
 <title>Todo list</title>
+<style>
+/* Modern Todo App Styling */
+:root {
+  --primary-color: #4a6fa5;
+  --primary-hover: #3a5a8a;
+  --success-color: #4caf50;
+  --danger-color: #f44336;
+  --text-color: #333;
+  --light-gray: #f5f5f5;
+  --medium-gray: #e0e0e0;
+  --dark-gray: #757575;
+  --shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+  --transition: all 0.3s ease;
+  --border-radius: 8px;
+}
+
+body {
+  font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+  color: var(--text-color);
+  background-color: #f9fafb;
+  line-height: 1.6;
+}
+
+/* Page header styling */
+.page-header {
+  margin-top: 40px !important;
+  padding-bottom: 15px !important;
+  border-bottom: 2px solid var(--primary-color) !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  align-items: center !important;
+}
+
+.page-header h1 {
+  font-weight: 700 !important;
+  color: var(--primary-color) !important;
+  margin: 0 !important;
+  font-size: 2.2rem !important;
+  transition: var(--transition) !important;
+}
+
+.page-header h1:hover {
+  transform: translateY(-2px) !important;
+}
+
+/* Todo item styling */
+.list-group-item {
+  background-color: white !important;
+  border-radius: var(--border-radius) !important;
+  padding: 16px 20px !important;
+  margin-bottom: 12px !important;
+  box-shadow: var(--shadow) !important;
+  display: flex !important;
+  align-items: center !important;
+  transition: var(--transition) !important;
+  position: relative !important;
+  overflow: hidden !important;
+  border: none !important;
+}
+
+.list-group-item:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+  z-index: 1 !important;
+}
+
+.list-group-item::before {
+  content: '' !important;
+  position: absolute !important;
+  left: 0 !important;
+  top: 0 !important;
+  height: 100% !important;
+  width: 4px !important;
+  background-color: var(--primary-color) !important;
+  transition: var(--transition) !important;
+}
+
+.list-group-item.todo-complete::before {
+  background-color: var(--success-color) !important;
+}
+
+/* Checkbox styling */
+.todo-status-checkbox {
+  appearance: none !important;
+  -webkit-appearance: none !important;
+  height: 22px !important;
+  width: 22px !important;
+  background-color: #fff !important;
+  border: 2px solid var(--primary-color) !important;
+  border-radius: 5px !important;
+  cursor: pointer !important;
+  margin-right: 15px !important;
+  position: relative !important;
+  transition: var(--transition) !important;
+  flex-shrink: 0 !important;
+}
+
+.todo-status-checkbox:checked {
+  background-color: var(--success-color) !important;
+  border-color: var(--success-color) !important;
+}
+
+.todo-status-checkbox:checked::after {
+  content: '✓' !important;
+  position: absolute !important;
+  color: white !important;
+  font-size: 14px !important;
+  font-weight: bold !important;
+  top: 50% !important;
+  left: 50% !important;
+  transform: translate(-50%, -50%) !important;
+}
+
+.todo-status-checkbox:hover {
+  transform: scale(1.05) !important;
+}
+
+/* Todo text styling */
+.todo-text {
+  flex-grow: 1 !important;
+}
+
+.todo-complete {
+  text-decoration: line-through !important;
+  color: var(--dark-gray) !important;
+  font-style: italic !important;
+}
+
+/* Delete button styling */
+.fa-trash-alt {
+  color: var(--medium-gray) !important;
+  font-size: 18px !important;
+  cursor: pointer !important;
+  transition: var(--transition) !important;
+  padding: 6px !important;
+  border-radius: 50% !important;
+  float: right !important;
+  margin-left: auto !important;
+}
+
+.fa-trash-alt:hover {
+  color: var(--danger-color) !important;
+  background-color: rgba(244, 67, 54, 0.1) !important;
+  transform: scale(1.1) !important;
+}
+
+/* Input field styling */
+.form-control {
+  width: 100% !important;
+  padding: 12px 15px !important;
+  border: 2px solid var(--medium-gray) !important;
+  border-radius: var(--border-radius) !important;
+  font-size: 1rem !important;
+  transition: var(--transition) !important;
+}
+
+.form-control:focus {
+  outline: none !important;
+  border-color: var(--primary-color) !important;
+  box-shadow: 0 0 0 3px rgba(74, 111, 165, 0.2) !important;
+}
+
+/* Add button styling */
+.btn-outline-primary {
+  background-color: transparent !important;
+  color: var(--primary-color) !important;
+  border: 2px solid var(--primary-color) !important;
+  padding: 10px 22px !important;
+  border-radius: var(--border-radius) !important;
+  font-weight: 600 !important;
+  cursor: pointer !important;
+  transition: var(--transition) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+.btn-outline-primary:hover {
+  background-color: var(--primary-color) !important;
+  color: white !important;
+  transform: translateY(-2px) !important;
+}
+
+/* List group styling */
+.list-group {
+  margin-top: 20px !important;
+}
+
+/* Animations */
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.list-group-item {
+  animation: fadeIn 0.3s ease-out !important;
+}
+
+/* Responsive design adjustments */
+@media (max-width: 768px) {
+  .page-header {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+  }
+  
+  .list-group-item {
+    padding: 14px 16px !important;
+  }
+  
+  .todo-status-checkbox {
+    height: 20px !important;
+    width: 20px !important;
+  }
+  
+  .form-row {
+    display: flex !important;
+    flex-direction: column !important;
+  }
+  
+  .col-md-6:last-child {
+    margin-top: 10px !important;
+  }
+  
+  .btn-outline-primary {
+    width: 100% !important;
+  }
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --primary-color: #64b5f6;
+    --primary-hover: #82c4f8;
+    --text-color: #e0e0e0;
+    --light-gray: #333;
+    --medium-gray: #555;
+    --dark-gray: #aaa;
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  body {
+    background-color: #121212 !important;
+  }
+  
+  .list-group-item {
+    background-color: #1e1e1e !important;
+  }
+  
+  .todo-status-checkbox {
+    background-color: #2d2d2d !important;
+    border-color: var(--primary-color) !important;
+  }
+  
+  .form-control {
+    background-color: #2d2d2d !important;
+    color: var(--text-color) !important;
+    border-color: #444 !important;
+  }
+  
+  hr {
+    border-color: #444 !important;
+  }
+}
+</style>
 {% endblock %}
 
 {% block content %}
